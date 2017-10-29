@@ -90,4 +90,18 @@ public class ArvoreAVL {
         System.out.println(this.getChave()+ ", ");
         dir.emOrdem();
     }
+
+    public void simplesEsq(ArvoreAVL noDesbalanceado){
+        ArvoreAVL p,q,hold;
+        p = noDesbalanceado;
+        q.setDir(p);
+        hold = q.getEsq();
+        q.setEsq(p);
+        p.setDir(hold);
+        p = q;
+    }
+
+
+
+
 }

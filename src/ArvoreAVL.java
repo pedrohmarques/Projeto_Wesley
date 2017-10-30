@@ -91,17 +91,6 @@ public class ArvoreAVL {
         dir.emOrdem();
     }
 
-    public void simplesEsq(ArvoreAVL noDesbalanceado){
-        ArvoreAVL p,
-                q = null,
-                hold;
-        p = noDesbalanceado;
-        q.setDir(p);
-        hold = q.getEsq();
-        q.setEsq(p);
-        p.setDir(hold);
-        p = q;
-    }
 
     public int altura(ArvoreAVL raiz){
         int tamAltura = 0;

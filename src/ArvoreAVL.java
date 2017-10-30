@@ -92,7 +92,9 @@ public class ArvoreAVL {
     }
 
     public void simplesEsq(ArvoreAVL noDesbalanceado){
-        ArvoreAVL p,q,hold;
+        ArvoreAVL p,
+                q = null,
+                hold;
         p = noDesbalanceado;
         q.setDir(p);
         hold = q.getEsq();
@@ -101,7 +103,20 @@ public class ArvoreAVL {
         p = q;
     }
 
+    public int altura(ArvoreAVL raiz){
+        int tamAltura = 0;
+        if(raiz == null)
+            tamAltura = -1;
+        else{
+            int he = altura(raiz.esq);
+            int hd = altura(raiz.dir);
+            if(he<hd)
+                tamAltura = hd+1;
+            else
+                tamAltura = he+1;
+        }
 
-
+        return tamAltura;
+    }
 
 }

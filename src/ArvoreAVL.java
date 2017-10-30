@@ -124,10 +124,13 @@ public class ArvoreAVL {
     private static int max( int lhs, int rhs ) {
         return lhs > rhs ? lhs : rhs;
     }
-
     public  ArvoreAVL duplaDir( ArvoreAVL k3 ) {
-        k3.esq = duplaDir( k3.esq );
-        return duplaDir( k3 );
+        k3.esq = simplesEsq( k3.esq );
+        return simplesDir( k3 );
+    }
+    private static ArvoreAVL duplaEsq( ArvoreAVL k1 ) {
+        k1.dir = simplesDir(k1.dir);
+        return simplesEsq(k1);
     }
 
     public ArvoreAVL simplesDir( ArvoreAVL k2 ) {
@@ -137,5 +140,13 @@ public class ArvoreAVL {
         k2.fatorBalanceamento = max( balanceamento( k2.esq ), balanceamento( k2.esq ) ) + 1;
         k1.fatorBalanceamento = max( balanceamento( k1.esq ), k2.fatorBalanceamento ) + 1;
         return k1;
+    }
+    private static ArvoreAVL simplesEsq( ArvoreAVL k1 ) {
+        ArvoreAVL k2 = k1.dir;
+        k1.dir = k2.esq;
+        k2.esq = k1;
+        k1.fatorBalanceamento = max( balanceamento( k1.esq ), balanceamento(k1.dir) ) + 1;
+        k2.fatorBalanceamento = max( balanceamento( k2.dir ), k1.fatorBalanceamento ) + 1;
+        return k2;
     }
 }

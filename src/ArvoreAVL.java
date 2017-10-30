@@ -108,4 +108,8 @@ public class ArvoreAVL {
         return tamAltura;
     }
 
+    public  ArvoreAVL duplaDir( ArvoreAVL k3 ) {
+        k3.esq = duplaDir( k3.esq );
+        return duplaDir( k3 );
+    }
 }

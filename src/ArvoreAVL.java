@@ -1,5 +1,6 @@
 public class ArvoreAVL {
 
+    private int fatorBalanceamento;
     private int chave;
     private ArvoreAVL esq;
     private ArvoreAVL dir;
@@ -26,6 +27,14 @@ public class ArvoreAVL {
         return esq;
     }
 
+    public int getFatorBalanceamento() {
+        return fatorBalanceamento;
+    }
+
+    public void setFatorBalanceamento(int fatorBalanceamento) {
+        this.fatorBalanceamento = fatorBalanceamento;
+    }
+
     public int getChave() {
         return chave;
     }
@@ -40,6 +49,10 @@ public class ArvoreAVL {
 
     public void setEsq(ArvoreAVL esq) {
         this.esq = esq;
+    }
+
+    private static int balanceamento(ArvoreAVL fator){
+        return fator == null ? -1 : fator.getFatorBalanceamento();
     }
 
     public boolean estahVazia(){
@@ -108,8 +121,21 @@ public class ArvoreAVL {
         return tamAltura;
     }
 
+    private static int max( int lhs, int rhs ) {
+        return lhs > rhs ? lhs : rhs;
+    }
+
     public  ArvoreAVL duplaDir( ArvoreAVL k3 ) {
         k3.esq = duplaDir( k3.esq );
         return duplaDir( k3 );
+    }
+
+    public ArvoreAVL simplesDir( ArvoreAVL k2 ) {
+        ArvoreAVL k1 = k2.esq;
+        k2.esq = k1.dir;
+        k1.esq = k2;
+        k2.fatorBalanceamento = max( balanceamento( k2.esq ), balanceamento( k2.esq ) ) + 1;
+        k1.fatorBalanceamento = max( balanceamento( k1.esq ), k2.fatorBalanceamento ) + 1;
+        return k1;
     }
 }

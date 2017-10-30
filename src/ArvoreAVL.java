@@ -124,7 +124,7 @@ public class ArvoreAVL {
     private static int max( int lhs, int rhs ) {
         return lhs > rhs ? lhs : rhs;
     }
-    public  ArvoreAVL duplaDir( ArvoreAVL k3 ) {
+    private static   ArvoreAVL duplaDir( ArvoreAVL k3 ) {
         k3.esq = simplesEsq( k3.esq );
         return simplesDir( k3 );
     }
@@ -133,7 +133,7 @@ public class ArvoreAVL {
         return simplesEsq(k1);
     }
 
-    public ArvoreAVL simplesDir( ArvoreAVL k2 ) {
+    private static ArvoreAVL simplesDir( ArvoreAVL k2 ) {
         ArvoreAVL k1 = k2.esq;
         k2.esq = k1.dir;
         k1.esq = k2;

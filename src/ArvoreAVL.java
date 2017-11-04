@@ -1,5 +1,4 @@
 public class ArvoreAVL {
-
     private int fatorBalanceamento;
     private int chave;
     private ArvoreAVL esq;
@@ -11,8 +10,9 @@ public class ArvoreAVL {
         setEsq(esq);
     }
 
+
     public ArvoreAVL(){
-        this(-1,null,null);
+       this(-1,null,null);
     }
 
     public ArvoreAVL(int chave){
@@ -51,10 +51,6 @@ public class ArvoreAVL {
         this.esq = esq;
     }
 
-    /*private static int altura(ArvoreAVL fator){
-        return fator == null ? -1 : fator.getFatorBalanceamento();
-    }
-*/
     //Pega a altura da folha
     private static int altura(ArvoreAVL raiz){
         int tamAltura = 0;
@@ -87,7 +83,7 @@ public class ArvoreAVL {
         setDir(new ArvoreAVL());
     }
 
-    public boolean insere(int chave){
+    private boolean insere(int chave){
         boolean inserido = true;
 
         if(estahVazia())anexa(chave);
@@ -96,13 +92,18 @@ public class ArvoreAVL {
             else if(chave>this.getChave()){dir.insere(chave);}
             else inserido = false;
         }
+        //Esta balanceando so falta arrumar esta parte
+        // this = balancear(this);
         balancear(this);
         return inserido;
     }
 
     //pega o desbalanceado
     private int pegaDesbalanceado(ArvoreAVL arvore){
-        int desbalanceado = altura(arvore.esq) - altura(arvore.dir);
+        int alturaEsq = altura(arvore.esq);
+        int alturaDir = altura(arvore.dir);
+        alturaEsq = alturaEsq * -1;
+        int desbalanceado =  alturaEsq + alturaDir;
         return desbalanceado;
     }
 
@@ -157,12 +158,12 @@ public class ArvoreAVL {
     }
 
     private static   ArvoreAVL duplaDir( ArvoreAVL k3 ) {
-        k3.esq = simplesEsq( k3.esq );
+        k3.esq = simplesEsq( k3.dir );
         return simplesDir( k3 );
     }
 
     private static ArvoreAVL duplaEsq( ArvoreAVL k1 ) {
-        k1.dir = simplesDir(k1.dir);
+        k1.dir = simplesDir(k1.esq);
         return simplesEsq(k1);
     }
 

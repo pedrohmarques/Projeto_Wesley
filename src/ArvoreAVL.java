@@ -1,3 +1,6 @@
+import java.util.LinkedList;
+import java.util.Queue;
+
 public class ArvoreAVL {
     private int fatorBalanceamento;
     private int chave;
@@ -9,7 +12,6 @@ public class ArvoreAVL {
         setDir(dir);
         setEsq(esq);
     }
-
 
     public ArvoreAVL(){
        this(-1,null,null);
@@ -83,7 +85,7 @@ public class ArvoreAVL {
         setDir(new ArvoreAVL());
     }
 
-    private boolean insere(int chave){
+    public boolean insere(int chave){
         boolean inserido = true;
 
         if(estahVazia())anexa(chave);
@@ -153,11 +155,27 @@ public class ArvoreAVL {
         dir.emOrdem();
     }
 
+    public void emLargura(){
+        Queue<ArvoreAVL> fila = new LinkedList<>();
+        fila.add(this);
+        while(!fila.isEmpty()){
+            ArvoreAVL no = fila.poll();
+            if(no.chave == -1){
+                System.out.print("");
+            }else{
+                System.out.print(no.chave + " | ");
+            }
+            if(no.esq != null) fila.add(no.esq);
+            if(no.dir != null) fila.add(no.dir);
+        }
+
+    }
+
     private static int max( int lhs, int rhs ) {
         return lhs > rhs ? lhs : rhs;
     }
 
-    private static   ArvoreAVL duplaDir( ArvoreAVL k3 ) {
+    private static ArvoreAVL duplaDir( ArvoreAVL k3 ) {
         k3.esq = simplesEsq( k3.dir );
         return simplesDir( k3 );
     }

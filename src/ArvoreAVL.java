@@ -51,10 +51,28 @@ public class ArvoreAVL {
         this.esq = esq;
     }
 
-    private static int balanceamento(ArvoreAVL fator){
+    /*private static int altura(ArvoreAVL fator){
         return fator == null ? -1 : fator.getFatorBalanceamento();
     }
+*/
+    //Pega a altura da folha
+    private static int altura(ArvoreAVL raiz){
+        int tamAltura = 0;
+        if(raiz == null)
+            tamAltura = -1;
+        else{
+            int he = altura(raiz.esq);
+            int hd = altura(raiz.dir);
+            if(he<hd)
+                tamAltura = hd+1;
+            else
+                tamAltura = he+1;
+        }
 
+        return tamAltura;
+    }
+
+    //verifica se esta vazia
     public boolean estahVazia(){
         boolean vazia = false;
         if(getEsq() == null && getDir() == null){
@@ -74,12 +92,42 @@ public class ArvoreAVL {
 
         if(estahVazia())anexa(chave);
         else{
-            if(chave<getChave())esq.insere(chave);
-            else if(chave>this.getChave())dir.insere(chave);
+            if(chave<getChave()){esq.insere(chave);}
+            else if(chave>this.getChave()){dir.insere(chave);}
             else inserido = false;
         }
-
+        balancear(this);
         return inserido;
+    }
+
+    //pega o desbalanceado
+    private int pegaDesbalanceado(ArvoreAVL arvore){
+        int desbalanceado = altura(arvore.esq) - altura(arvore.dir);
+        return desbalanceado;
+    }
+
+    //balanceia a arvore
+    public ArvoreAVL balancear(ArvoreAVL treeBalancear){
+        if(pegaDesbalanceado(treeBalancear) == 2){
+            //se estiver desbalanceada pra direita
+            if(pegaDesbalanceado(treeBalancear.esq)>0){
+                treeBalancear =simplesDir(treeBalancear);
+            }else{
+                treeBalancear = duplaDir(treeBalancear);
+            }
+        }else if(pegaDesbalanceado(treeBalancear) == -2){
+            //se estiver desbalanceada pra direita
+            if(pegaDesbalanceado(treeBalancear.esq)<0){
+                treeBalancear = simplesEsq(treeBalancear);
+            }else{
+                treeBalancear = duplaEsq(treeBalancear);
+            }
+
+        }
+        treeBalancear.fatorBalanceamento = max(altura(treeBalancear.esq),
+                altura(treeBalancear.dir));
+
+        return treeBalancear;
     }
 
     public void preOrdem(){
@@ -104,30 +152,15 @@ public class ArvoreAVL {
         dir.emOrdem();
     }
 
-
-    public int altura(ArvoreAVL raiz){
-        int tamAltura = 0;
-        if(raiz == null)
-            tamAltura = -1;
-        else{
-            int he = altura(raiz.esq);
-            int hd = altura(raiz.dir);
-            if(he<hd)
-                tamAltura = hd+1;
-            else
-                tamAltura = he+1;
-        }
-
-        return tamAltura;
-    }
-
     private static int max( int lhs, int rhs ) {
         return lhs > rhs ? lhs : rhs;
     }
+
     private static   ArvoreAVL duplaDir( ArvoreAVL k3 ) {
         k3.esq = simplesEsq( k3.esq );
         return simplesDir( k3 );
     }
+
     private static ArvoreAVL duplaEsq( ArvoreAVL k1 ) {
         k1.dir = simplesDir(k1.dir);
         return simplesEsq(k1);
@@ -137,16 +170,17 @@ public class ArvoreAVL {
         ArvoreAVL k1 = k2.esq;
         k2.esq = k1.dir;
         k1.esq = k2;
-        k2.fatorBalanceamento = max( balanceamento( k2.esq ), balanceamento( k2.esq ) ) + 1;
-        k1.fatorBalanceamento = max( balanceamento( k1.esq ), k2.fatorBalanceamento ) + 1;
+        k2.fatorBalanceamento = max( altura( k2.esq ), altura( k2.esq ) ) + 1;
+        k1.fatorBalanceamento = max( altura( k1.esq ), k2.fatorBalanceamento ) + 1;
         return k1;
     }
+
     private static ArvoreAVL simplesEsq( ArvoreAVL k1 ) {
         ArvoreAVL k2 = k1.dir;
         k1.dir = k2.esq;
         k2.esq = k1;
-        k1.fatorBalanceamento = max( balanceamento( k1.esq ), balanceamento(k1.dir) ) + 1;
-        k2.fatorBalanceamento = max( balanceamento( k2.dir ), k1.fatorBalanceamento ) + 1;
+        k1.fatorBalanceamento = max( altura( k1.esq ), altura(k1.dir) ) + 1;
+        k2.fatorBalanceamento = max( altura( k2.dir ), k1.fatorBalanceamento ) + 1;
         return k2;
     }
 }

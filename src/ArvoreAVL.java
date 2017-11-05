@@ -94,52 +94,25 @@ public class ArvoreAVL {
             else if(chave>this.getChave()){dir.insere(chave);}
             else inserido = false;
         }
-        //Esta balanceando so falta arrumar esta parte
-        // this = balancear(this);
-        balancear(this);
+
+        this.balancear(this);
         return inserido;
     }
-    public boolean remove(ArvoreAVL remover){
-        ArvoreAVL r;
-        if (remover.getEsq() == null || remover.getDir() == null) {
 
-            if (remover.getPai() == null) {
-                this.raiz = null;
-                remover = null;
-                return;
-            }
-            r = remover;
-
-        } else {
-            r = sucessor(remover);
-            remover.setChave(r.getChave());
-        }
-
-        ArvoreAVL p = null;
-        if (r.getEsq() != null) {
-            p = r.getEsq();
-        } else {
-            p = r.getDir();
-        }
-
-        if (p != null) {
-            p.setPai(r.getPai());
-        }
-
-        if (r.getPai() == null) {
-            this.raiz = p;
-        } else {
-            if (r == r.getPai().getEsq()) {
-                r.getPai().setEsq(p);;
-            } else {
-                r.getPai().setDir(p);
-            }
-            balancear(r.getPai());
-        }
-        r = null;
-    }
-
-    }
+    //não funciona ainda
+   public void Remocao(ArvoreAVL arvore, int chave){
+       if(arvore == null) return;
+       else{
+           if(arvore.getChave()>chave){
+                Remocao(arvore.esq,chave);
+           }else if(arvore.getChave()<chave){
+                Remocao(arvore.dir,chave);
+           }else if(arvore.getChave()==chave){
+                if(arvore.esq.getChave() == -1 && arvore.dir.getChave()==-1)
+                    arvore.setChave(-1);
+           }
+       }
+   }
 
     //pega o desbalanceado
     private int pegaDesbalanceado(ArvoreAVL arvore){

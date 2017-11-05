@@ -1,5 +1,7 @@
-public class ArvoreAVL {
+import java.util.LinkedList;
+import java.util.Queue;
 
+public class ArvoreAVL {
     private int fatorBalanceamento;
     private int chave;
     private ArvoreAVL esq;
@@ -12,7 +14,7 @@ public class ArvoreAVL {
     }
 
     public ArvoreAVL(){
-        this(-1,null,null);
+       this(-1,null,null);
     }
 
     public ArvoreAVL(int chave){
@@ -51,10 +53,6 @@ public class ArvoreAVL {
         this.esq = esq;
     }
 
-    /*private static int altura(ArvoreAVL fator){
-        return fator == null ? -1 : fator.getFatorBalanceamento();
-    }
-*/
     //Pega a altura da folha
     private static int altura(ArvoreAVL raiz){
         int tamAltura = 0;
@@ -96,6 +94,8 @@ public class ArvoreAVL {
             else if(chave>this.getChave()){dir.insere(chave);}
             else inserido = false;
         }
+        //Esta balanceando so falta arrumar esta parte
+        // this = balancear(this);
         balancear(this);
         return inserido;
     }
@@ -143,7 +143,10 @@ public class ArvoreAVL {
 
     //pega o desbalanceado
     private int pegaDesbalanceado(ArvoreAVL arvore){
-        int desbalanceado = altura(arvore.esq) - altura(arvore.dir);
+        int alturaEsq = altura(arvore.esq);
+        int alturaDir = altura(arvore.dir);
+        alturaEsq = alturaEsq * -1;
+        int desbalanceado =  alturaEsq + alturaDir;
         return desbalanceado;
     }
 
@@ -193,17 +196,33 @@ public class ArvoreAVL {
         dir.emOrdem();
     }
 
+    public void emLargura(){
+        Queue<ArvoreAVL> fila = new LinkedList<>();
+        fila.add(this);
+        while(!fila.isEmpty()){
+            ArvoreAVL no = fila.poll();
+            if(no.chave == -1){
+                System.out.print("");
+            }else{
+                System.out.print(no.chave + " | ");
+            }
+            if(no.esq != null) fila.add(no.esq);
+            if(no.dir != null) fila.add(no.dir);
+        }
+
+    }
+
     private static int max( int lhs, int rhs ) {
         return lhs > rhs ? lhs : rhs;
     }
 
-    private static   ArvoreAVL duplaDir( ArvoreAVL k3 ) {
-        k3.esq = simplesEsq( k3.esq );
+    private static ArvoreAVL duplaDir( ArvoreAVL k3 ) {
+        k3.esq = simplesEsq( k3.dir );
         return simplesDir( k3 );
     }
 
     private static ArvoreAVL duplaEsq( ArvoreAVL k1 ) {
-        k1.dir = simplesDir(k1.dir);
+        k1.dir = simplesDir(k1.esq);
         return simplesEsq(k1);
     }
 

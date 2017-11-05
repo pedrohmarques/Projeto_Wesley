@@ -99,6 +99,47 @@ public class ArvoreAVL {
         balancear(this);
         return inserido;
     }
+    public boolean remove(ArvoreAVL remover){
+        ArvoreAVL r;
+        if (remover.getEsq() == null || remover.getDir() == null) {
+
+            if (remover.getPai() == null) {
+                this.raiz = null;
+                remover = null;
+                return;
+            }
+            r = remover;
+
+        } else {
+            r = sucessor(remover);
+            remover.setChave(r.getChave());
+        }
+
+        ArvoreAVL p = null;
+        if (r.getEsq() != null) {
+            p = r.getEsq();
+        } else {
+            p = r.getDir();
+        }
+
+        if (p != null) {
+            p.setPai(r.getPai());
+        }
+
+        if (r.getPai() == null) {
+            this.raiz = p;
+        } else {
+            if (r == r.getPai().getEsq()) {
+                r.getPai().setEsq(p);;
+            } else {
+                r.getPai().setDir(p);
+            }
+            balancear(r.getPai());
+        }
+        r = null;
+    }
+
+    }
 
     //pega o desbalanceado
     private int pegaDesbalanceado(ArvoreAVL arvore){

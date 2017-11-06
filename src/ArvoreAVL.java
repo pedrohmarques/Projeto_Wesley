@@ -1,3 +1,7 @@
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -14,7 +18,7 @@ public class ArvoreAVL {
     }
 
     public ArvoreAVL(){
-       this(-1,null,null);
+        this(-1,null,null);
     }
 
     public ArvoreAVL(int chave){
@@ -85,6 +89,44 @@ public class ArvoreAVL {
         setDir(new ArvoreAVL());
     }
 
+    public boolean gravou() {
+        boolean gravado = false;
+        File arquivo = null;
+        FileOutputStream saida = null;
+        OutputStreamWriter gravador = null;
+        BufferedWriter buffer_saida = null;
+        try {
+            arquivo = new File("arvoreAVL.txt");
+            saida = new FileOutputStream(arquivo, true);
+            gravador = new OutputStreamWriter(saida);
+            buffer_saida = new BufferedWriter(gravador);
+
+            String linha = System.getProperty("line.separator");
+            if (!estahVazia()) {
+                buffer_saida.write(this.emLargura() + linha);
+            } else {
+                throw new Exception("ERROR: Lista vazia.");
+            }
+            gravado = true;
+        } catch (Exception e) {
+            gravado = false;
+            System.err.println("ERROR: Não foi possível registrar no arquivo.");
+        } finally {
+            try {
+                if (buffer_saida != null)
+                    buffer_saida.close();
+                if (gravador != null)
+                    gravador.close();
+                if (saida != null)
+                    saida.close();
+            } catch (Exception e) {
+                System.out.println("ERRO ao fechar os manipuladores de escrita do arquivo arvoreAVL.txt");
+                e.printStackTrace();
+            }
+            return gravado;
+        }
+    }
+
     public boolean insere(int chave){
         boolean inserido = true;
 
@@ -94,25 +136,11 @@ public class ArvoreAVL {
             else if(chave>this.getChave()){dir.insere(chave);}
             else inserido = false;
         }
-
-        this.balancear(this);
+        //Esta balanceando so falta arrumar esta parte
+        // this = balancear(this);
+        balancear(this);
         return inserido;
     }
-
-    //não funciona ainda
-   public void Remocao(ArvoreAVL arvore, int chave){
-       if(arvore == null) return;
-       else{
-           if(arvore.getChave()>chave){
-                Remocao(arvore.esq,chave);
-           }else if(arvore.getChave()<chave){
-                Remocao(arvore.dir,chave);
-           }else if(arvore.getChave()==chave){
-                if(arvore.esq.getChave() == -1 && arvore.dir.getChave()==-1)
-                    arvore.setChave(-1);
-           }
-       }
-   }
 
     //pega o desbalanceado
     private int pegaDesbalanceado(ArvoreAVL arvore){
@@ -169,19 +197,21 @@ public class ArvoreAVL {
         dir.emOrdem();
     }
 
-    public void emLargura(){
+    public String emLargura(){
         Queue<ArvoreAVL> fila = new LinkedList<>();
+        StringBuilder sb = new StringBuilder();
         fila.add(this);
         while(!fila.isEmpty()){
             ArvoreAVL no = fila.poll();
             if(no.chave == -1){
-                System.out.print("");
+                sb.append("");
             }else{
-                System.out.print(no.chave + " | ");
+                sb.append(no.chave + " | ");
             }
             if(no.esq != null) fila.add(no.esq);
             if(no.dir != null) fila.add(no.dir);
         }
+        return sb.toString();
 
     }
 

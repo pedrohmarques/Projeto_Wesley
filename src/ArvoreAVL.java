@@ -138,7 +138,7 @@ public class ArvoreAVL {
         }
         //Esta balanceando so falta arrumar esta parte
         // this = balancear(this);
-        balancear(this);
+        this.balancear(this);
         return inserido;
     }
 

@@ -9,6 +9,7 @@ public class ArvoreBinariaPesquisa implements ArvoreBinaria {
     private static class No {
         Item registro;
         No esq, dir ;
+        private int fatorBalanceamento;
     }
 
     private No raiz;
@@ -36,6 +37,8 @@ public class ArvoreBinariaPesquisa implements ArvoreBinaria {
             p.dir = insere (registro, p.dir);
         else
             System.out.println (" - ERRO! J� existente: " + registro.toString () + ".");
+
+        p = balancear(p);
         return p;
     }
 
@@ -78,8 +81,10 @@ public class ArvoreBinariaPesquisa implements ArvoreBinaria {
             else
                 p.esq = encontraNovaRaiz (p, p.esq);
         }
+        p = balancear(p);
         return p;
     }
+
 
     private No encontraNovaRaiz (No raiz, No descendente) {
         if (descendente.dir != null)
@@ -90,6 +95,113 @@ public class ArvoreBinariaPesquisa implements ArvoreBinaria {
         }
         return descendente;
     }
+    private static int altura(No raiz){
+        int tamAltura = 0;
+        if(raiz == null)
+            tamAltura = -1;
+        else{
+            int he = altura(raiz.esq);
+            int hd = altura(raiz.dir);
+            if(he<hd)
+                tamAltura = hd+1;
+            else
+                tamAltura = he+1;
+        }
+
+        return tamAltura;
+    }
+
+    private int pegaDesbalanceado(No arvore){
+        int alturaEsq = altura(arvore.esq);
+        int alturaDir = altura(arvore.dir);
+        alturaEsq = alturaEsq * -1;
+        int desbalanceado =  alturaEsq + alturaDir;
+        return desbalanceado;
+    }
+
+    public No balancear(No treeBalancear){
+        if(pegaDesbalanceado(treeBalancear) == 2){
+            //se estiver desbalanceada pra direita
+            if(treeBalancear.esq == null)
+                treeBalancear = simplesDirNull(treeBalancear);
+            else if(pegaDesbalanceado(treeBalancear.esq)>0){
+                treeBalancear =simplesDir(treeBalancear);
+            }else{
+                treeBalancear = duplaDir(treeBalancear);
+            }
+        }else if(pegaDesbalanceado(treeBalancear) == -2){
+            //se estiver desbalanceada pra direita
+            if(treeBalancear.esq == null)
+                treeBalancear = simplesEsqNull(treeBalancear);
+            if(pegaDesbalanceado(treeBalancear.esq)<0){
+                treeBalancear = simplesEsq(treeBalancear);
+            }else{
+                treeBalancear = duplaEsq(treeBalancear);
+            }
+
+        }
+        treeBalancear.fatorBalanceamento = max(altura(treeBalancear.esq),
+                altura(treeBalancear.dir));
+
+        return treeBalancear;
+    }
+
+    private static int max( int lhs, int rhs ) {
+        return lhs > rhs ? lhs : rhs;
+    }
+
+    private No simplesDirNull(No raiz){
+        No aux = raiz.dir;
+        Item aux2 = raiz.registro;
+        raiz = aux;
+        this.insere(aux2, raiz);
+        return raiz;
+    }
+
+    private  No simplesEsqNull(No raiz){
+        No aux = raiz.esq;
+        Item aux2 = raiz.registro;
+        raiz = aux;
+        this.insere(aux2,raiz);
+        return raiz;
+    }
+
+    private No duplaDir(No k3 ) {
+        k3.dir = simplesEsq(k3.dir );
+        return simplesDir(k3);
+    }
+
+    private  No duplaEsq(No k1 ) {
+        k1.esq = simplesDir(k1.esq);
+        return simplesEsq(k1);
+    }
+
+    private  No simplesDir(No k2 ) {
+        No k1 = k2.esq;
+        if(k2.esq == null)
+           k1 = simplesDirNull(k2);
+        else {
+            k2.esq = k1.dir;
+            k1.esq = k2;
+            k2.fatorBalanceamento = max(altura(k2.esq), altura(k2.esq)) + 1;
+            k1.fatorBalanceamento = max(altura(k1.esq), k2.fatorBalanceamento) + 1;
+        }
+        return k1;
+    }
+
+    private No simplesEsq(No k1 ) {
+        No k2 = k1.dir;
+        if(k1.dir == null)
+            k2 = simplesEsqNull(k1);
+        else {
+            k1.dir = k2.esq;
+            k2.esq = k1;
+            k1.fatorBalanceamento = max(altura(k1.esq), altura(k1.dir)) + 1;
+            k2.fatorBalanceamento = max(altura(k2.dir), k1.fatorBalanceamento) + 1;
+        }
+        return k2;
+    }
+
 
     public void imprime_em_ordem () {
         this.em_ordem (this.raiz);

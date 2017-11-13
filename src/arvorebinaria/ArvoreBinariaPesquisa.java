@@ -281,12 +281,9 @@ public class ArvoreBinariaPesquisa implements ArvoreBinaria {
     }
 
 
-
-// Gabriel Arrumar
-/*
     public boolean gravou() {
         boolean gravado = false;
-        File arquivo = null;
+        File arquivo;
         FileOutputStream saida = null;
         OutputStreamWriter gravador = null;
         BufferedWriter buffer_saida = null;
@@ -297,8 +294,8 @@ public class ArvoreBinariaPesquisa implements ArvoreBinaria {
             buffer_saida = new BufferedWriter(gravador);
 
             String linha = System.getProperty("line.separator");
-            if (!estahVazia()) {
-                buffer_saida.write(this.emLargura() + linha);
+            if (raiz != null) {
+                buffer_saida.write(this.em_largura(raiz) + linha);
             } else {
                 throw new Exception("ERROR: Lista vazia.");
             }
@@ -320,5 +317,6 @@ public class ArvoreBinariaPesquisa implements ArvoreBinaria {
             }
             return gravado;
         }
-    }*/
+    }
+    
 }

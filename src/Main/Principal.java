@@ -30,7 +30,10 @@ public class Principal {
         item = new MeuItem(62);
         arvore.insere(item);
 
+        arvore.imprime_em_ordem();
 
+        item = new MeuItem(15);
+        arvore.retira(item);
 
         arvore.imprime_em_ordem();
 

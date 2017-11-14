@@ -32,10 +32,5 @@ public class Principal {
 
         arvore.imprime_em_ordem();
 
-        item = new MeuItem(15);
-        arvore.retira(item);
-
-        arvore.imprime_em_ordem();
-
     }
 }

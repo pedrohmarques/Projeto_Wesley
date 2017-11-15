@@ -1,11 +1,10 @@
 package arvorebinaria;
 
-import Item.*;
+import item.*;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
+import java.io.*;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -155,12 +154,12 @@ public class ArvoreBinariaPesquisa implements ArvoreBinaria {
     }
 
     private static No simplesEsq(No k1 ) {
-         No k2 = k1.dir;
-         k1.dir = k2.esq;
-         k2.esq = k1;
-         k1.fatorBalanceamento = max(altura(k1.esq), altura(k1.dir)) + 1;
-         k2.fatorBalanceamento = max(altura(k2.dir), k1.fatorBalanceamento) + 1;
-         return k2;
+        No k2 = k1.dir;
+        k1.dir = k2.esq;
+        k2.esq = k1;
+        k1.fatorBalanceamento = max(altura(k1.esq), altura(k1.dir)) + 1;
+        k2.fatorBalanceamento = max(altura(k2.dir), k1.fatorBalanceamento) + 1;
+        return k2;
     }
 
 
@@ -174,20 +173,20 @@ public class ArvoreBinariaPesquisa implements ArvoreBinaria {
         this.pos_ordem (this.raiz);
     }
     public void imprime_em_largura () {
-        this.em_largura (this.raiz);
+        System.out.println(this.em_largura (this.raiz));
     }
 
     private void em_ordem (No p) {
         if (p != null) {
             em_ordem (p.esq);
-            System.out.print (p.registro.toString () + "  ");
+            System.out.print (p.registro.toString () + " ");
             em_ordem (p.dir);
         }
     }
 
     private void pre_ordem(No p){
         if(p != null){
-            System.out.println(p.registro.toString() + " ");
+            System.out.print(p.registro.toString() + " ");
             pre_ordem(p.esq);
             pre_ordem(p.dir);
         }
@@ -197,7 +196,7 @@ public class ArvoreBinariaPesquisa implements ArvoreBinaria {
         if(p != null){
             pos_ordem(p.esq);
             pos_ordem(p.dir);
-            System.out.println(p.registro.toString() + " ");
+            System.out.print(p.registro.toString() + " ");
         }
     }
 
@@ -210,7 +209,7 @@ public class ArvoreBinariaPesquisa implements ArvoreBinaria {
             if(no.registro == null){
                 sb.append("");
             }else{
-                sb.append(no.registro.toString() + " | ");
+                sb.append(no.registro.toString() + ", ");
             }
             if(no.esq != null) fila.add(no.esq);
             if(no.dir != null) fila.add(no.dir);
@@ -258,7 +257,7 @@ public class ArvoreBinariaPesquisa implements ArvoreBinaria {
             if (raiz != null) {
                 buffer_saida.write(this.em_largura(raiz) + linha);
             } else {
-                throw new Exception("ERROR: Lista vazia.");
+                System.out.println("ERROR: Lista vazia.");
             }
             gravado = true;
         } catch (Exception e) {
@@ -279,5 +278,57 @@ public class ArvoreBinariaPesquisa implements ArvoreBinaria {
             return gravado;
         }
     }
-    
+
+    public ArvoreBinariaPesquisa recuperarArvore(int iteracao){
+        String aux = "";
+        ArvoreBinariaPesquisa arvore = new ArvoreBinariaPesquisa();
+
+        File arquivo;
+        FileInputStream entrada = null;
+        InputStreamReader leitor = null;
+        BufferedReader buffer_entrada = null;
+
+        try{
+            arquivo = new File("arvoreAVL.txt");
+            entrada = new FileInputStream(arquivo);
+            leitor = new InputStreamReader(entrada);
+            buffer_entrada = new BufferedReader(leitor);
+
+            for(int i=0; i<iteracao; i++) {
+                if ((aux = buffer_entrada.readLine()) == null) {
+                    break;
+                }
+            }
+
+            if(aux != null) {
+                String[] itens = aux.split(", ");
+
+                for (int i = 0; i < itens.length; i++) {
+                    int item = Integer.parseInt(itens[i]);
+                    arvore.insere(new MeuItem(item));
+                }
+            }
+            else{
+                System.out.println("ERROR: Não foi possível encontrar nenhuma árvore na linha solicitada");
+            }
+
+        }catch(Exception e){
+            System.out.println("Não foi possível abrir o arquivo arvoreAVL.txt");
+        }
+        finally {
+            try {
+                if (buffer_entrada != null)
+                    buffer_entrada.close ();
+                if (leitor != null)
+                    leitor.close ();
+                if (entrada != null)
+                    entrada.close ();
+            } catch (Exception e) {
+                System.out.println ("ERROR: Não foi possível fechar os manipuladores de entrada do arvoreAVL.txt");
+                e.printStackTrace ();
+            }
+        }
+        return arvore;
+    }
+
 }
